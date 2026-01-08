@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,28 +9,43 @@ import { CommonModule } from '@angular/common';
     templateUrl: './header.html'
 })
 export class HeaderComponent implements OnInit {
-    userRole: string = '';
-    userName: string = '';
+    userName = '';
+    userRole = '';
+    isLoggedIn = false;
+    canAdd = false;
 
-    ngOnInit(): void {
+    constructor(private router: Router) {
+        // Listen to route changes and update login status
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {
+                this.checkLoginStatus();
+            }
+        });
+    }
+
+    ngOnInit() {
+        this.checkLoginStatus();
+    }
+
+    checkLoginStatus() {
         const user = localStorage.getItem('user');
         if (user) {
-            const userData = JSON.parse(user);
-            this.userName = userData.name || '';
-            this.userRole = userData.role || '';
+            const data = JSON.parse(user);
+            this.userName = data.name || '';
+            this.userRole = data.role || '';
+            this.isLoggedIn = true;
+            this.canAdd = (data.role === 'clerk' || data.role === 'manager' || data.role === 'admin');
+        } else {
+            this.isLoggedIn = false;
+            this.userName = '';
+            this.userRole = '';
+            this.canAdd = false;
         }
     }
 
-    logout(): void {
+    logout() {
         localStorage.clear();
-        window.location.href = '/login';
-    }
-
-    isLoggedIn(): boolean {
-        return !!localStorage.getItem('user');
-    }
-
-    canAddRecords(): boolean {
-        return this.userRole === 'clerk' || this.userRole === 'manager' || this.userRole === 'admin';
+        this.isLoggedIn = false;
+        this.router.navigate(['/login']);
     }
 }

@@ -11,24 +11,23 @@ import { HttpClient } from '@angular/common/http';
     templateUrl: './login.html'
 })
 export class LoginComponent {
-    email: string = '';
-    password: string = '';
-    errorMessage: string = '';
+    email = '';
+    password = '';
+    error = '';
 
     constructor(private http: HttpClient, private router: Router) { }
 
-    onLogin(): void {
+    onLogin() {
         this.http.post<any>('http://localhost:3000/api/login', {
             email: this.email,
             password: this.password
         }).subscribe({
             next: (response) => {
                 localStorage.setItem('user', JSON.stringify(response));
-                localStorage.setItem('role', response.role);
                 this.router.navigate(['/records']);
             },
             error: () => {
-                this.errorMessage = 'Invalid email or password';
+                this.error = 'Invalid email or password';
             }
         });
     }

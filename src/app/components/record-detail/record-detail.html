@@ -1,0 +1,73 @@
+<div class="container mt-4">
+    <div class="card" *ngIf="record">
+        <div class="card-header bg-primary text-white">
+            <h3>Record Details</h3>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>ID:</strong> {{ record.id }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Title:</strong> {{ record.title }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Artist:</strong> {{ record.artist }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Format:</strong> {{ record.format }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Genre:</strong> {{ record.genre }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Release Year:</strong> {{ record.releaseYear }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Price:</strong> ${{ record.price }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Stock:</strong> {{ record.stockQty }}
+                </div>
+            </div>
+
+            <hr>
+
+            <h5>Customer Information</h5>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Customer ID:</strong> {{ record.customerId || 'N/A' }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Name:</strong> {{ record.customerFirstName }} {{ record.customerLastName }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <strong>Contact:</strong> {{ record.customerContact || 'N/A' }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Email:</strong> {{ record.customerEmail || 'N/A' }}
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button class="btn btn-secondary me-2" (click)="goBack()">Back</button>
+                <button class="btn btn-warning me-2" (click)="editRecord()" [disabled]="!canUpdate">Update</button>
+                <button class="btn btn-danger" (click)="deleteRecord()" [disabled]="!canDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!record" class="alert alert-info">Loading...</div>
+</div>

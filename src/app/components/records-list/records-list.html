@@ -6,7 +6,7 @@
             <tr>
                 <th>Id</th>
                 <th>Customer ID</th>
-                <th>Customer Last Name</th>
+                <th>Last Name</th>
                 <th>Format</th>
                 <th>Genre</th>
                 <th>Actions</th>
@@ -20,12 +20,11 @@
                 <td>{{ record.format }}</td>
                 <td>{{ record.genre }}</td>
                 <td>
-                    <button class="btn btn-sm btn-primary me-1"
-                        (click)="record.id && viewRecord(record.id)">View</button>
-                    <button class="btn btn-sm btn-warning me-1" (click)="record.id && updateRecord(record.id)"
-                        [disabled]="!canUpdate()">Update</button>
-                    <button class="btn btn-sm btn-danger" (click)="record.id && deleteRecord(record.id)"
-                        [disabled]="!canDelete()">Delete</button>
+                    <button class="btn btn-sm btn-primary me-1" (click)="viewRecord(record.id)">View</button>
+                    <button class="btn btn-sm btn-warning me-1" (click)="updateRecord(record.id)"
+                        [disabled]="!canUpdate">Update</button>
+                    <button class="btn btn-sm btn-danger" (click)="deleteRecord(record.id)"
+                        [disabled]="!canDelete">Delete</button>
                 </td>
             </tr>
         </tbody>

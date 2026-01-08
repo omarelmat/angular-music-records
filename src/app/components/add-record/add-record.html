@@ -1,0 +1,52 @@
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h3>Add New Record</h3>
+        </div>
+        <div class="card-body">
+            <form (ngSubmit)="onSubmit()" #f="ngForm">
+
+                <h5>Record Information</h5>
+                <input type="text" class="form-control mb-2" placeholder="Title *" [(ngModel)]="record.title"
+                    name="title" required>
+                <input type="text" class="form-control mb-2" placeholder="Artist *" [(ngModel)]="record.artist"
+                    name="artist" required>
+
+                <select class="form-control mb-2" [(ngModel)]="record.format" name="format" required>
+                    <option value="">Select Format *</option>
+                    <option *ngFor="let f of formats" [value]="f">{{ f }}</option>
+                </select>
+
+                <select class="form-control mb-2" [(ngModel)]="record.genre" name="genre" required>
+                    <option value="">Select Genre *</option>
+                    <option *ngFor="let g of genres" [value]="g">{{ g }}</option>
+                </select>
+
+                <input type="number" class="form-control mb-2" placeholder="Release Year *"
+                    [(ngModel)]="record.releaseYear" name="releaseYear" required>
+                <input type="number" class="form-control mb-2" placeholder="Price *" [(ngModel)]="record.price"
+                    name="price" required>
+                <input type="number" class="form-control mb-2" placeholder="Stock Quantity *"
+                    [(ngModel)]="record.stockQty" name="stockQty" required>
+
+                <hr>
+
+                <h5>Customer Information</h5>
+                <input type="text" class="form-control mb-2" placeholder="Customer ID (e.g., 123A) *"
+                    [(ngModel)]="record.customerId" name="customerId" required pattern="^[0-9]+[A-Za-z]$">
+                <input type="text" class="form-control mb-2" placeholder="First Name *"
+                    [(ngModel)]="record.customerFirstName" name="customerFirstName" required>
+                <input type="text" class="form-control mb-2" placeholder="Last Name *"
+                    [(ngModel)]="record.customerLastName" name="customerLastName" required>
+                <input type="text" class="form-control mb-2" placeholder="Contact (min 8 digits) *"
+                    [(ngModel)]="record.customerContact" name="customerContact" required pattern="^[0-9]{8,}$">
+                <input type="email" class="form-control mb-2" placeholder="Email *" [(ngModel)]="record.customerEmail"
+                    name="customerEmail" required email>
+
+                <button type="submit" class="btn btn-primary me-2" [disabled]="f.invalid">Add Record</button>
+                <button type="button" class="btn btn-secondary" (click)="goBack()">Cancel</button>
+
+            </form>
+        </div>
+    </div>
+</div>
