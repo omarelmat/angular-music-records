@@ -4,12 +4,30 @@ import { RecordsListComponent } from './components/records-list/records-list';
 import { RecordDetailComponent } from './components/record-detail/record-detail';
 import { AddRecordComponent } from './components/add-record/add-record';
 import { UpdateRecordComponent } from './components/update-record/update-record';
+import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
-    { path: 'records', component: RecordsListComponent },
-    { path: 'records/:id', component: RecordDetailComponent },
-    { path: 'records/:id/edit', component: UpdateRecordComponent },
-    { path: 'add-record', component: AddRecordComponent }
+    {
+        path: 'records',
+        component: RecordsListComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'records/:id',
+        component: RecordDetailComponent,
+        canActivate: [authGuard]
+    },
+    {
+        path: 'records/:id/edit',
+        component: UpdateRecordComponent,
+        canActivate: [authGuard],
+        data: { role: 'manager' }
+    },
+    {
+        path: 'add-record',
+        component: AddRecordComponent,
+        canActivate: [authGuard]
+    }
 ];
