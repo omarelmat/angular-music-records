@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { Record } from '../../models/record.model';
+import { RecordsService, Record } from '../../services/records.spec';
+import { StockStatusPipe } from '../../pipes/stock-status-pipe';
 
 @Component({
   selector: 'app-record-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, StockStatusPipe],
   templateUrl: './record-detail.html'
 })
 export class RecordDetailComponent implements OnInit {
@@ -17,7 +17,7 @@ export class RecordDetailComponent implements OnInit {
   canDelete = false;
 
   constructor(
-    private http: HttpClient,
+    private recordsService: RecordsService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -37,8 +37,9 @@ export class RecordDetailComponent implements OnInit {
   }
 
   loadRecord(id: number) {
-    this.http.get<Record>(`http://localhost:3000/api/records/${id}`).subscribe({
-      next: (data) => { this.record = data; }
+    this.recordsService.getRecordById(id).subscribe({
+      next: (data) => { this.record = data; },
+      error: (err) => { console.error('Error loading record:', err); }
     });
   }
 
@@ -54,8 +55,9 @@ export class RecordDetailComponent implements OnInit {
 
   deleteRecord() {
     if (this.record && this.canDelete && confirm('Are you sure you want to delete this record?')) {
-      this.http.delete(`http://localhost:3000/api/records/${this.record.id}`).subscribe({
-        next: () => { this.router.navigate(['/records']); }
+      this.recordsService.deleteRecord(this.record.id).subscribe({
+        next: () => { this.router.navigate(['/records']); },
+        error: (err) => { console.error('Error deleting record:', err); }
       });
     }
   }

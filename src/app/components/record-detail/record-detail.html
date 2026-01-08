@@ -9,7 +9,8 @@
                     <strong>ID:</strong> {{ record.id }}
                 </div>
                 <div class="col-md-6">
-                    <strong>Title:</strong> {{ record.title }}
+                    <strong>Title:</strong> {{ (record.title || record.recordTitle) | lowercase }}
+                    <!-- ✅ Built-in pipe -->
                 </div>
             </div>
 
@@ -33,10 +34,21 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <strong>Price:</strong> ${{ record.price }}
+                    <strong>Price:</strong> {{ record.price | currency:'USD' }} <!-- ✅ Built-in pipe -->
                 </div>
                 <div class="col-md-6">
-                    <strong>Stock:</strong> {{ record.stockQty }}
+                    <strong>Stock:</strong> {{ record.stockQty || record.stockQuantity }}
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <strong>Stock Status:</strong>
+                    <span class="badge" [class.bg-danger]="(record.stockQty || record.stockQuantity || 0) === 0"
+                        [class.bg-warning]="(record.stockQty || record.stockQuantity || 0) > 0 && (record.stockQty || record.stockQuantity || 0) <= 5"
+                        [class.bg-success]="(record.stockQty || record.stockQuantity || 0) > 5">
+                        {{ record.stockQty || record.stockQuantity | stockStatus }} <!-- ✅ Custom pipe -->
+                    </span>
                 </div>
             </div>
 
@@ -45,7 +57,7 @@
             <h5>Customer Information</h5>
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <strong>Customer ID:</strong> {{ record.customerId || 'N/A' }}
+                    <strong>Customer ID:</strong> {{ record.customerId || 'N/A' | lowercase }} <!-- ✅ Built-in pipe -->
                 </div>
                 <div class="col-md-6">
                     <strong>Name:</strong> {{ record.customerFirstName }} {{ record.customerLastName }}

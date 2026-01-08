@@ -1,31 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { RecordsService, Record } from '../../services/records.spec';
+import { StockStatusPipe } from '../../pipes/stock-status-pipe';
+
 
 // Import for Excel and PDF
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
-interface Record {
-    id: number;
-    customerId: string;
-    customerLastName: string;
-    customerFirstName?: string;
-    recordTitle?: string;
-    artist?: string;
-    format: string;
-    genre: string;
-    releaseYear?: number;
-    price?: number;
-    stockQuantity?: number;
-}
-
 @Component({
     selector: 'app-records-list',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, StockStatusPipe],
     templateUrl: './records-list.html'
 })
 export class RecordsListComponent implements OnInit {
@@ -34,7 +22,10 @@ export class RecordsListComponent implements OnInit {
     canUpdate = false;
     canDelete = false;
 
-    constructor(private http: HttpClient, private router: Router) { }
+    constructor(
+        private recordsService: RecordsService,
+        private router: Router
+    ) { }
 
     ngOnInit() {
         const user = localStorage.getItem('user');
@@ -47,8 +38,13 @@ export class RecordsListComponent implements OnInit {
     }
 
     loadRecords() {
-        this.http.get<Record[]>('http://localhost:3000/api/records').subscribe({
-            next: (data) => { this.records = data; }
+        this.recordsService.getRecords().subscribe({
+            next: (data: Record[]) => {
+                this.records = data;
+            },
+            error: (err: any) => {
+                console.error('Error loading records:', err);
+            }
         });
     }
 
@@ -64,15 +60,19 @@ export class RecordsListComponent implements OnInit {
 
     deleteRecord(id: number) {
         if (this.canDelete && confirm('Are you sure you want to delete this record?')) {
-            this.http.delete(`http://localhost:3000/api/records/${id}`).subscribe({
-                next: () => { this.loadRecords(); }
+            this.recordsService.deleteRecord(id).subscribe({
+                next: () => {
+                    this.loadRecords();
+                },
+                error: (err: any) => {
+                    console.error('Error deleting record:', err);
+                }
             });
         }
     }
 
     // ===== EXCEL EXPORT =====
     exportToExcel() {
-        // Prepare data
         const data = this.records.map(record => ({
             'ID': record.id,
             'Customer ID': record.customerId || 'N/A',
@@ -81,10 +81,8 @@ export class RecordsListComponent implements OnInit {
             'Genre': record.genre
         }));
 
-        // Create worksheet
         const ws = XLSX.utils.json_to_sheet(data);
 
-        // Genre colors
         const genreColors: any = {
             'Rock': 'FFCCCC',
             'Pop': 'CCE5FF',
@@ -93,12 +91,10 @@ export class RecordsListComponent implements OnInit {
             'Hip-Hop': 'FFE5CC'
         };
 
-        // Apply colors to rows
         this.records.forEach((record, index) => {
-            const rowNum = index + 2; // +2 because row 1 is header
+            const rowNum = index + 2;
             const color = genreColors[record.genre] || 'FFFFFF';
 
-            // Color each cell in the row
             for (let col = 0; col < 5; col++) {
                 const cellRef = XLSX.utils.encode_cell({ r: rowNum - 1, c: col });
                 if (!ws[cellRef]) continue;
@@ -108,7 +104,6 @@ export class RecordsListComponent implements OnInit {
             }
         });
 
-        // Create and download
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Records');
         XLSX.writeFile(wb, 'records.xlsx');
@@ -118,11 +113,9 @@ export class RecordsListComponent implements OnInit {
     exportToPDF() {
         const doc = new jsPDF();
 
-        // Title
         doc.setFontSize(16);
         doc.text('Records List', 14, 15);
 
-        // Prepare table data
         const tableData = this.records.map(record => [
             record.id,
             record.customerId || 'N/A',
@@ -131,7 +124,6 @@ export class RecordsListComponent implements OnInit {
             record.genre
         ]);
 
-        // Create table
         autoTable(doc, {
             head: [['ID', 'Customer ID', 'Last Name', 'Format', 'Genre']],
             body: tableData,
@@ -145,7 +137,6 @@ export class RecordsListComponent implements OnInit {
             }
         });
 
-        // Save
         doc.save('records.pdf');
     }
 }
