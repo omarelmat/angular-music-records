@@ -11,7 +11,6 @@ import { HeaderComponent } from './components/header/header';
     <router-outlet></router-outlet>
   `
 })
-export class AppComponent {
+export class App {
   title = 'music-records-app';
 }
-  
