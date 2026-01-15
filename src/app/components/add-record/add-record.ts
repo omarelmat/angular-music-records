@@ -11,7 +11,7 @@ import { Record } from '../../models/record.model';
   imports: [FormsModule, CommonModule],
   templateUrl: './add-record.html'
 })
-export class AddRecordComponent implements OnInit {
+export class AddRecord implements OnInit {
   record: Record = {
     title: '',
     artist: '',
