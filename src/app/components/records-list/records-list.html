@@ -15,18 +15,18 @@
                 <th>Last Name</th>
                 <th>Format</th>
                 <th>Genre</th>
-                <th>Stock Status</th> <!-- ✅ NEW COLUMN -->
+                <th>Stock Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let record of records">
                 <td>{{ record.id }}</td>
-                <td>{{ record.customerId || 'N/A' | lowercase }}</td> <!-- ✅ Built-in pipe -->
+                <td>{{ record.customerId || 'N/A' | lowercase }}</td>
                 <td>{{ record.customerLastName || 'N/A' }}</td>
                 <td>{{ record.format }}</td>
                 <td>{{ record.genre }}</td>
-                <td>{{ record.stockQuantity || record.stockQty | stockStatus }}</td> <!-- ✅ Custom pipe -->
+                <td>{{ record.stockQuantity || record.stockQty | stockStatus }}</td>
                 <td>
                     <button class="btn btn-sm btn-primary me-1" (click)="viewRecord(record.id)">View</button>
                     <button class="btn btn-sm btn-warning me-1" (click)="updateRecord(record.id)"

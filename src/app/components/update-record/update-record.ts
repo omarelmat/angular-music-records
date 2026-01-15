@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
   imports: [FormsModule, CommonModule],
   templateUrl: './update-record.html'
 })
-export class UpdateRecordComponent implements OnInit {
+export class UpdateRecord implements OnInit {
   record: any = null;
   formats: any[] = [];
   genres: any[] = [];

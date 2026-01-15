@@ -10,7 +10,7 @@ describe('UpdateRecord', () => {
     await TestBed.configureTestingModule({
       imports: [UpdateRecord]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(UpdateRecord);
     component = fixture.componentInstance;

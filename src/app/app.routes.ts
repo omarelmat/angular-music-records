@@ -2,8 +2,8 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login';
 import { RecordsListComponent } from './components/records-list/records-list';
 import { RecordDetailComponent } from './components/record-detail/record-detail';
-import { AddRecordComponent } from './components/add-record/add-record';
-import { UpdateRecordComponent } from './components/update-record/update-record';
+import { AddRecord } from './components/add-record/add-record';
+import { UpdateRecord } from './components/update-record/update-record';
 import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
@@ -21,13 +21,13 @@ export const routes: Routes = [
     },
     {
         path: 'records/:id/edit',
-        component: UpdateRecordComponent,
+        component: UpdateRecord,
         canActivate: [authGuard],
         data: { role: 'manager' }
     },
     {
         path: 'add-record',
-        component: AddRecordComponent,
+        component: AddRecord,
         canActivate: [authGuard]
     }
 ];
